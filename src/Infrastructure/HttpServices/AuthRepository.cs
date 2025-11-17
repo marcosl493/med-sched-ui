@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces.Repositories;
+using FluentResults;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace Infrastructure.HttpServices;
@@ -7,13 +9,13 @@ namespace Infrastructure.HttpServices;
 public class AuthRepository(HttpClient httpClient) : IAuthRepository
 {
     private readonly HttpClient _httpClient = httpClient;
-    public async Task<IAuthRepository.LoginResponse?> LoginAsync(IAuthRepository.LoginRequest request, CancellationToken cancellationToken)
+    public async Task<Result<IAuthRepository.LoginResponse?>> LoginAsync(IAuthRepository.LoginRequest request, CancellationToken cancellationToken)
     {
         using var response = await _httpClient.PostAsJsonAsync("api/auth", request, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            return null;
-        }
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+            return Result.Fail("Usuário ou senha inválidos.");
+        if(!response.IsSuccessStatusCode)
+            return Result.Fail("Houve algum erro inesperado.");
         var loginResponse = await response.Content.ReadFromJsonAsync<IAuthRepository.LoginResponse>(cancellationToken: cancellationToken);
         return loginResponse;
 
