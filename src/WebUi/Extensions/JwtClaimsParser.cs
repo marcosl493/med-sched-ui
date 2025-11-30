@@ -7,8 +7,8 @@ public class JwtClaimsParser
 {
     public static ClaimsPrincipal ToClaimsPrincipal(string jwt)
     {
-         var handler = new JwtSecurityTokenHandler();
-         var token = handler.ReadJwtToken(jwt);
+        var handler = new JwtSecurityTokenHandler();
+        var token = handler.ReadJwtToken(jwt);
 
         var identity = new ClaimsIdentity(
             token.Claims,

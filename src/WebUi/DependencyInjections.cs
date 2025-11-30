@@ -23,7 +23,7 @@ public static class DependencyInjections
             .BindConfiguration(AuthRepository.Options.SectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
-        
+
         services.AddInfrastructure();
         return services;
     }

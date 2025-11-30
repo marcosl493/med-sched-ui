@@ -14,7 +14,7 @@ public class AuthRepository(HttpClient httpClient) : IAuthRepository
         using var response = await _httpClient.PostAsJsonAsync("api/auth", request, cancellationToken);
         if (response.StatusCode == HttpStatusCode.Unauthorized)
             return Result.Fail("Usuário ou senha inválidos.");
-        if(!response.IsSuccessStatusCode)
+        if (!response.IsSuccessStatusCode)
             return Result.Fail("Houve algum erro inesperado.");
         var loginResponse = await response.Content.ReadFromJsonAsync<IAuthRepository.LoginResponse>(cancellationToken: cancellationToken);
         return loginResponse;
