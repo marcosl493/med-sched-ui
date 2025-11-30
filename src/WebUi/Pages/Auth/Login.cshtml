@@ -1,0 +1,38 @@
+﻿
+
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div>
+
+    <div class="container d-flex justify-content-center align-items-center min-vh-100 bg-body text-body">
+        <div class="card bg-body-secondary border border-body shadow p-4" style="max-width: 380px; width: 100%;">
+            
+            <h3 class="text-center mb-4">Entrar</h3>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="@Model.Username" class="form-label"></label>
+                    <input asp-for="@Model.Username" class="form-control" placeholder="Seu e-mail" />
+                    <span asp-validation-for="@Model.Username" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="@Model.Password" class="form-label"></label>
+                    <input asp-for="@Model.Password" type="password" class="form-control" placeholder="Sua senha" />
+                    <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Entrar</button>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
