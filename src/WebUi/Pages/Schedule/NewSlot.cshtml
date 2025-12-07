@@ -1,11 +1,9 @@
 ﻿@page
-@using Domain.Enums
 @model NewSlotModel
 @{
     ViewData["Title"] = "Adicionar Horário Disponível";
 }
 
-<!-- Material Icons -->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
 
 <div class="container mt-4">
@@ -93,6 +91,6 @@
         }
 
         repetirSwitch.addEventListener("change", toggleRepeat);
-        toggleRepeat(); // inicialização
+        toggleRepeat();
     </script>
 }
