@@ -19,7 +19,7 @@
                 <div class="mb-3">
                     <label asp-for="@Model.StartDate" class="form-label">
                         <span class="material-icons-round align-middle me-1">calendar_today</span>
-                        Data Início
+                        Hora de início
                     </label>
                     <input asp-for="@Model.StartDate" type="datetime-local" class="form-control" />
                     <span asp-validation-for="@Model.StartDate" class="text-danger"></span>
@@ -28,9 +28,9 @@
                 <div class="mb-3">
                     <label asp-for="@Model.EndDate" class="form-label">
                         <span class="material-icons-round align-middle me-1">event</span>
-                        Data Fim
+                        Hora de término
                     </label>
-                    <input asp-for="@Model.EndDate" type="datetime-local" class="form-control" />
+                    <input asp-for="@Model.EndDate" type="time" class="form-control" />
                     <span asp-validation-for="@Model.EndDate" class="text-danger"></span>
                 </div>
 

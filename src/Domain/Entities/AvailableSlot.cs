@@ -20,6 +20,7 @@ public class AvailableSlot
     }
     public IEnumerable<AvailableSlot> GetAvailableSlots()
     {
+        
 
         if (RepeatWeekly)
         {
@@ -42,8 +43,19 @@ public class AvailableSlot
                     );
                 }
             }
-
-
         }
+
+        var avaliableFirstSlot = new AvailableSlot(
+                        Range,
+                        false,
+                        0,
+                        Days
+                    );
+        var list = new List<AvailableSlot> { avaliableFirstSlot };
+        foreach (var item in list)
+        {
+            yield return item;
+        }
+        
     }
 }

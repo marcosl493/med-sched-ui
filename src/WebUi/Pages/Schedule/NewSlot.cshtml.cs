@@ -13,26 +13,37 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
     [Required, DataType(DataType.DateTime)]
     public required DateTime StartDate { get; set; }
     [BindProperty]
-    [Required, DataType(DataType.DateTime)]
-    public required DateTime EndDate { get; set; }
+    [Required, DataType(DataType.Time)]
+    public required TimeOnly EndDate { get; set; }
     [BindProperty]
     [Required]
     public bool RepeatWeekly { get; set; }
     [BindProperty]
-    [Required, Range(1, 52)]
-    public int WeeksToRepeat { get; set; }
+    [Range(1, 52)]
+    public int? WeeksToRepeat { get; set; }
     [BindProperty]
     public List<int> SelectedDays { get; set; } = [];
     public void OnGet()
     {
+        var initialStartDate = DateTime.Now.AddHours(1);
+        var date = new DateOnly(initialStartDate.Year, initialStartDate.Month, initialStartDate.Day);
+        var time = new TimeOnly(initialStartDate.Hour, initialStartDate.Minute);
+        StartDate = new DateTime(date, time, DateTimeKind.Local);
     }
     public async Task<IActionResult> OnPost()
     {
-        if (StartDate >= EndDate)
+        var endDate = new DateTime(
+            StartDate.Year,
+            StartDate.Month,
+            StartDate.Day,
+            EndDate.Hour,
+            EndDate.Minute,
+            0);
+        if (StartDate >= endDate)
         {
             ModelState.AddModelError(nameof(EndDate), "A data final deve ser depois da data de início.");
         }
-        if (StartDate < DateTimeOffset.Now)
+        if (StartDate < DateTime.Now)
         {
             ModelState.AddModelError(nameof(StartDate), "A data de início deve estar no futuro.");
         }
@@ -40,10 +51,10 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
         {
             return Page();
         }
-        var range = new DateRange(StartDate, EndDate);
+        var range = new DateRange(StartDate, endDate);
         var days = SelectedDays.Select(d => (DayOfWeek)d).ToList();
 
-        var avalilableSlot = new AvailableSlot(range, RepeatWeekly, WeeksToRepeat, days);
+        var avalilableSlot = new AvailableSlot(range, RepeatWeekly, WeeksToRepeat ?? 0, days);
         var slots = avalilableSlot.GetAvailableSlots();
 
         var physicianId = User.FindFirst("sub")?.Value;
@@ -57,6 +68,6 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
             ModelState.AddModelError(string.Empty, result.Errors[0]!.Message);
             return Page();
         }
-        return RedirectToPage("/Index");
+        return RedirectToPage("/Schedule/Index");
     }
 }
