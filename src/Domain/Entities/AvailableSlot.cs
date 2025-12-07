@@ -20,42 +20,18 @@ public class AvailableSlot
     }
     public IEnumerable<AvailableSlot> GetAvailableSlots()
     {
-        
-
         if (RepeatWeekly)
         {
-
-
-            for (int i = 1; i <= WeeksToRepeat; i++)
+            for (int i = 0; i < WeeksToRepeat; i++)
             {
-                var baseWeek = Range.StartTime.AddDays(i * 7);
-                var startWeek = baseWeek.AddDays(-(int)baseWeek.DayOfWeek);
-                foreach (var day in Days)
-                {
-                    yield return new AvailableSlot(
-                        new DateRange(
-                            startWeek.AddDays((int)day).AddHours(Range.StartTime.Hour).AddMinutes(Range.StartTime.Minute),
-                            startWeek.AddDays((int)day).AddHours(Range.EndTime.Hour).AddMinutes(Range.EndTime.Minute)
-                        ),
-                        false,
-                        0,
-                        Days
-                    );
-                }
+                var start = Range.StartTime.AddDays(i * 7);
+                var end = Range.EndTime.AddDays(i * 7);
+                yield return new AvailableSlot(new DateRange(start, end), false, 0, Days);
             }
+            yield break;
         }
 
-        var avaliableFirstSlot = new AvailableSlot(
-                        Range,
-                        false,
-                        0,
-                        Days
-                    );
-        var list = new List<AvailableSlot> { avaliableFirstSlot };
-        foreach (var item in list)
-        {
-            yield return item;
-        }
-        
+        // Not repeating: return only the original slot
+        yield return new AvailableSlot(Range, false, 0, Days);
     }
 }

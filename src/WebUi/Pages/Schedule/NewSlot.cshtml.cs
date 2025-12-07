@@ -11,7 +11,7 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
 {
     [BindProperty]
     [Required, DataType(DataType.DateTime)]
-    public required DateTime StartDate { get; set; }
+    public required DateTimeOffset StartDate { get; set; }
     [BindProperty]
     [Required, DataType(DataType.Time)]
     public required TimeOnly EndDate { get; set; }
@@ -39,6 +39,11 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
             EndDate.Hour,
             EndDate.Minute,
             0);
+
+        var endDateTimeOffset = new DateTimeOffset(
+            endDate,
+            StartDate.Offset);
+
         if (StartDate >= endDate)
         {
             ModelState.AddModelError(nameof(EndDate), "A data final deve ser depois da data de início.");
@@ -51,7 +56,7 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
         {
             return Page();
         }
-        var range = new DateRange(StartDate, endDate);
+        var range = new DateRange(StartDate, endDateTimeOffset);
         var days = SelectedDays.Select(d => (DayOfWeek)d).ToList();
 
         var avalilableSlot = new AvailableSlot(range, RepeatWeekly, WeeksToRepeat ?? 0, days);
