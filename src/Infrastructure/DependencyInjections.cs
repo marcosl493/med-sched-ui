@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Repositories;
+using Infrastructure.HttpHandlers;
 using Infrastructure.HttpServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,12 +12,19 @@ public static class DependencyInjections
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
+        services.AddTransient<MedSchedAuthHandler>();
         services.AddHttpClient<IAuthRepository, AuthRepository>((sp, client) =>
         {
             var options = sp.GetRequiredService<IOptions<AuthRepository.Options>>().Value;
             client.BaseAddress = new Uri(options.BaseUrl);
             client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
         });
+        services.AddHttpClient<IMedSchedRepository, MedSchedRepository>((sp, client) =>
+        {
+            var options = sp.GetRequiredService<IOptions<MedSchedRepository.Options>>().Value;
+            client.BaseAddress = new Uri(options.BaseUrl);
+            client.Timeout = TimeSpan.FromSeconds(options.TimeoutSeconds);
+        }).AddHttpMessageHandler<MedSchedAuthHandler>();
         services.AddLogging();
         return services;
     }

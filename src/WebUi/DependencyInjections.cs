@@ -23,7 +23,12 @@ public static class DependencyInjections
             .BindConfiguration(AuthRepository.Options.SectionName)
             .ValidateDataAnnotations()
             .ValidateOnStart();
+        services.AddOptions<MedSchedRepository.Options>()
+            .BindConfiguration(MedSchedRepository.Options.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
+        services.AddHttpContextAccessor();
         services.AddInfrastructure();
         return services;
     }
