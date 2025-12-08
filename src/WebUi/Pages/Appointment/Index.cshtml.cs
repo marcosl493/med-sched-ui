@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using static Application.Interfaces.Repositories.IMedSchedRepository;
 
-namespace WebUi.Pages.Schedule;
+namespace WebUi.Pages.Appointment;
 
 public class IndexModel(IMedSchedRepository repository) : PageModel
 {
-    public GetAllSchedulesDto Schedules { get; set; } = new GetAllSchedulesDto([], 0);
+    public GetAllAppointmentDto Appointments { get; set; } = null!;
 
     [BindProperty(SupportsGet = true)]
     [Range(minimum: 0, maximum: int.MaxValue)]
@@ -16,7 +16,7 @@ public class IndexModel(IMedSchedRepository repository) : PageModel
 
     [BindProperty(SupportsGet = true)]
     public int Top { get; set; } = 10;
-    public bool HasNext => (Skip + 1) * Top < Schedules?.Count;
+    public bool HasNext => (Skip + 1) * Top < Appointments.Count;
     public async Task<IActionResult> OnGet(int skip, CancellationToken cancellationToken, int top = 10)
     {
         Skip = skip == -1 ? 0 : skip;
@@ -26,16 +26,8 @@ public class IndexModel(IMedSchedRepository repository) : PageModel
         {
             return RedirectToPage("/");
         }
-        var result = await repository.GetSchedulesAsync(physicianId!, skip, null, top, cancellationToken);
-        if (result.IsFailed || result.Value == null)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Message);
-            }
-            return Page();
-        }
-        Schedules = result.Value;
+        var result = await repository.GetAllAppointmentsAsync(top, physicianId!, null, null, Skip, cancellationToken);
+        Appointments = result.ValueOrDefault ?? new GetAllAppointmentDto([], 0);
         return Page();
     }
 }

@@ -28,7 +28,43 @@ public class MedSchedRepository(HttpClient httpClient) : IMedSchedRepository
         return Result.Ok();
     }
 
-    public async Task<Result<IEnumerable<IMedSchedRepository.ScheduleDto>>> GetSchedulesAsync(Guid? physicianId, int? skip, DateTime? startTime, int? top, CancellationToken cancellationToken)
+    public async Task<Result<IMedSchedRepository.GetAllAppointmentDto?>> GetAllAppointmentsAsync(int top, Guid? physicianId, IMedSchedRepository.AppointmentStatus? status, Guid? patientId, int? skip, CancellationToken cancellationToken)
+    {
+        var queryParts = new List<string>();
+        if (physicianId.HasValue)
+            queryParts.Add($"physicianId={Uri.EscapeDataString(physicianId.Value.ToString())}");
+        if (patientId.HasValue)
+            queryParts.Add($"patientId={Uri.EscapeDataString(patientId.Value.ToString())}");
+        if (skip.HasValue)
+            queryParts.Add($"skip={skip.Value}");
+        if (status.HasValue)
+            queryParts.Add($"status={(int)status}");
+
+        queryParts.Add($"top={top}");
+        var url = "api/appointments" + (queryParts.Count > 0 ? "?" + string.Join("&", queryParts) : string.Empty);
+        using var response = await _httpClient.GetAsync(url, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Fail("Erro ao obter os horários. Tente novamente mais tarde.");
+        }
+        var result = await response.Content.ReadFromJsonAsync<IMedSchedRepository.GetAllAppointmentDto>(cancellationToken);
+
+        return Result.Ok(result);
+    }
+
+    public async Task<Result<IMedSchedRepository.PatientDto?>> GetPatientByIdAsync(Guid Id, CancellationToken cancellationToken)
+    {
+        var resource = $"api/patients/{Id}";
+        using var response = await _httpClient.GetAsync(resource, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Fail("Erro ao obter os dados do paciente. Tente novamente mais tarde.");
+        }
+        var result = await response.Content.ReadFromJsonAsync<IMedSchedRepository.PatientDto>(cancellationToken);
+        return result;
+    }
+
+    public async Task<Result<IMedSchedRepository.GetAllSchedulesDto?>> GetSchedulesAsync(Guid? physicianId, int? skip, DateTime? startTime, int? top, CancellationToken cancellationToken)
     {
         var queryParts = new List<string>();
         if (physicianId.HasValue)
@@ -47,8 +83,8 @@ public class MedSchedRepository(HttpClient httpClient) : IMedSchedRepository
         {
             return Result.Fail("Erro ao obter os horários. Tente novamente mais tarde.");
         }
-        var result = await response.Content.ReadFromJsonAsync<IEnumerable<IMedSchedRepository.ScheduleDto>>(cancellationToken);
-        return Result.Ok(result ?? []);
+        var result = await response.Content.ReadFromJsonAsync<IMedSchedRepository.GetAllSchedulesDto>(cancellationToken);
+        return Result.Ok(result);
     }
 
     public class Options

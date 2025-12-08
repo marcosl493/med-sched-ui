@@ -4,12 +4,11 @@
     ViewData["Title"] = "Adicionar Horário Disponível";
 }
 
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
 
 <div class="container mt-4">
     <div class="card shadow-lg">
         <div class="card-header bg-dark text-white d-flex align-items-center">
-            <span class="material-icons-round me-2">schedule</span>
+            <span class="material-symbols-rounded me-2">schedule</span>
             <h5 class="m-0">Novo Horário Disponível</h5>
         </div>
 
@@ -18,7 +17,7 @@
             <form method="post">
                 <div class="mb-3">
                     <label asp-for="@Model.StartDate" class="form-label">
-                        <span class="material-icons-round align-middle me-1">calendar_today</span>
+                        <span class="material-symbols-rounded align-middle me-1">calendar_today</span>
                         Hora de início
                     </label>
                     <input asp-for="@Model.StartDate" type="datetime-local" class="form-control" />
@@ -27,7 +26,7 @@
 
                 <div class="mb-3">
                     <label asp-for="@Model.EndDate" class="form-label">
-                        <span class="material-icons-round align-middle me-1">event</span>
+                        <span class="material-symbols-rounded align-middle me-1">event</span>
                         Hora de término
                     </label>
                     <input asp-for="@Model.EndDate" type="time" class="form-control" />
@@ -37,7 +36,7 @@
                 <div class="form-check form-switch mb-3">
                     <input asp-for="@Model.RepeatWeekly" class="form-check-input" id="switchRepetir" />
                     <label class="form-check-label" for="switchRepetir">
-                        <span class="material-icons-round align-middle me-1">repeat</span>
+                        <span class="material-symbols-rounded align-middle me-1">repeat</span>
                         Repetir por semanas
                     </label>
                 </div>
@@ -45,7 +44,7 @@
                 <div id="repeatContainer" style="display:none;">
                     <div class="mb-3">
                         <label asp-for="@Model.WeeksToRepeat" class="form-label">
-                            <span class="material-icons-round align-middle me-1">numbers</span>
+                            <span class="material-symbols-rounded align-middle me-1">numbers</span>
                             Quantas semanas repetir?
                         </label>
                         <input asp-for="@Model.WeeksToRepeat" type="number" min="1" class="form-control" />
@@ -53,7 +52,7 @@
                     </div>
 
                     <label class="form-label">
-                        <span class="material-icons-round align-middle me-1">date_range</span>
+                        <span class="material-symbols-rounded align-middle me-1">date_range</span>
                         Escolha os dias da semana:
                     </label>
 
@@ -71,7 +70,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-dark mt-3">
-                    <span class="material-icons-round align-middle me-1">check_circle</span>
+                    <span class="material-symbols-rounded align-middle me-1">check_circle</span>
                     Salvar
                 </button>
             </form>

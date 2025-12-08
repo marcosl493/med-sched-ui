@@ -11,7 +11,7 @@
     <h4 class="mb-3">Timeline dos horários</h4>
 
     <ul class="timeline">
-        @foreach (var s in Model.Schedules)
+        @foreach (var s in Model.Schedules.Schedules)
         {
             <li class="timeline-item">
                 <div class="card p-3 shadow-sm">
@@ -40,60 +40,37 @@
 
 <hr />
 
-<div class="card mt-4 shadow-sm">
-    <div class="card-body">
+<div class="d-flex justify-content-center mt-4">
+    <ul class="pagination mb-0">
 
-        <form method="get" class="row g-3 align-items-end mb-3">
+        <li class="page-item @(Model.Skip == 0 ? "disabled" : "")">
+            <a class="page-link"
+               asp-route-Skip="@(Model.Skip - 1)"
+               asp-route-Top="@Model.Top">
+                « Anterior
+            </a>
+        </li>
 
-            <div class="col-md-3">
-                <label class="form-label small fw-bold">Itens por página</label>
-                <input class="form-control form-control-sm" type="number" name="Top" value="@Model.Top" min="1" />
-            </div>
+        <li class="page-item active">
+            <span class="page-link">
+                Página @(Model.Skip + 1)
+            </span>
+        </li>
 
-            <div class="col-md-3">
-                <label class="form-label small fw-bold">Página</label>
-                <input class="form-control form-control-sm" type="number" name="Skip" value="@Model.Skip" min="0" />
-            </div>
+        <li class="page-item @(Model.HasNext ? "" : "disabled")">
+            <a class="page-link"
+               asp-route-Skip="@(Model.Skip + 1)"
+               asp-route-Top="@Model.Top">
+                Próxima »
+            </a>
+        </li>
 
-            <div class="col-md-3">
-                <button class="btn btn-primary btn-sm w-100">
-                    <i class="bi bi-filter"></i> Filtrar
-                </button>
-            </div>
-
-        </form>
-
-        <nav class="d-flex justify-content-center">
-            <ul class="pagination mb-0">
-
-                <li class="page-item @(Model.Skip == 0 ? "disabled" : "")">
-                    <a class="page-link"
-                       asp-route-skip="@(Model.Skip - 1)"
-                       asp-route-top="@Model.Top">
-                        « Anterior
-                    </a>
-                </li>
-
-                <li class="page-item active">
-                    <span class="page-link">
-                        Página @Model.Skip
-                    </span>
-                </li>
-
-                <li class="page-item">
-                    <a class="page-link"
-                       asp-route-skip="@(Model.Skip + 1)"
-                       asp-route-top="@Model.Top">
-                        Próxima »
-                    </a>
-                </li>
-
-            </ul>
-        </nav>
-
-    </div>
+    </ul>
 </div>
 
+<div class="text-muted small mt-3 text-center">
+    Total de registros: <strong>@Model.Schedules.Count</strong>
+</div>
 
 <style>
     .timeline {

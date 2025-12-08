@@ -19,7 +19,7 @@ public class NewSlotModel(IMedSchedRepository repository) : PageModel
     [Required]
     public bool RepeatWeekly { get; set; }
     [BindProperty]
-    [Range(1, 52)]
+    [Range(1, 5)]
     public int? WeeksToRepeat { get; set; }
     [BindProperty]
     public List<int> SelectedDays { get; set; } = [];
