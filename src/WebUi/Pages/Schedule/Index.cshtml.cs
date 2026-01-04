@@ -12,7 +12,7 @@ public class IndexModel(IMedSchedRepository repository) : PageModel
 
     [BindProperty(SupportsGet = true)]
     [Range(minimum: 0, maximum: int.MaxValue)]
-    public int Skip { get; set; } = 0;
+    public int Skip { get; set; }
 
     [BindProperty(SupportsGet = true)]
     public int Top { get; set; } = 10;
@@ -37,5 +37,19 @@ public class IndexModel(IMedSchedRepository repository) : PageModel
         }
         Schedules = result.Value;
         return Page();
+    }
+
+    public async Task<IActionResult> OnPostDeleteAsync(Guid physicianId, Guid scheduleId,CancellationToken cancellationToken)
+    {
+        var result = await repository.DeleteScheduleAsync(physicianId, scheduleId, cancellationToken);
+        if (result.IsFailed)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Message);
+            }
+            return Page();
+        }
+        return RedirectToPage(new { skip = Skip, top = Top });
     }
 }

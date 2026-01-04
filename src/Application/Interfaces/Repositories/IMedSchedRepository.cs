@@ -8,6 +8,7 @@ public interface IMedSchedRepository
     Task<Result<GetAllSchedulesDto?>> GetSchedulesAsync(Guid? physicianId, int? skip, DateTime? startTime, int? top, CancellationToken cancellationToken);
     Task<Result<GetAllAppointmentDto?>> GetAllAppointmentsAsync(int top, Guid? physicianId, AppointmentStatus? status, Guid? patientId, int? skip, CancellationToken cancellationToken);
     Task<Result<PatientDto?>> GetPatientByIdAsync(Guid Id, CancellationToken cancellationToken);
+    Task<Result> DeleteScheduleAsync(Guid physicianId, Guid scheduleId, CancellationToken cancellationToken);
     public record ScheduleDto(
         Guid Id,
         PhysicianDto Physician,
