@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces.Repositories;
 using Domain.ValueObjects;
 using FluentResults;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Json;
 
@@ -25,6 +26,18 @@ public class MedSchedRepository(HttpClient httpClient) : IMedSchedRepository
         {
             return Result.Fail("Houve algum erro ao criar os horários disponíveis. Verifique seus horários, e tente novamente.");
         }
+        return Result.Ok();
+    }
+
+    public async Task<Result> DeleteScheduleAsync(Guid physicianId, Guid scheduleId, CancellationToken cancellationToken)
+    {
+
+        using var response = await _httpClient.DeleteAsync($"api/physicians/{physicianId}/schedules/{scheduleId}", cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            return Result.Fail("Houve algum erro ao deletar os horários. Verifique seus horários, e tente novamente.");
+        }
+
         return Result.Ok();
     }
 

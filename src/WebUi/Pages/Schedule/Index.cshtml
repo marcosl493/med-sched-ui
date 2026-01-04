@@ -23,6 +23,16 @@
                     @if (s.IsAvaliable)
                     {
                         <span class="badge bg-success mt-2">Disponível</span>
+                        <div class="mt-2 d-flex justify-content-end">
+                            <form method="post" asp-page-handler="Delete" onsubmit="return confirm('Deseja realmente excluir este horário?');">
+                                <input type="hidden" name="scheduleId" value="@s.Id" />
+                                <input type="hidden" name="physicianId" value="@s.Physician.Id" />
+                                <button class="btn btn-outline-danger btn-sm" type="submit" title="Excluir">
+                                    <span class="material-symbols-rounded">delete</span>
+                                </button>
+                                @Html.AntiForgeryToken()
+                            </form>
+                        </div>
                     }
                     else
                     {
@@ -32,6 +42,7 @@
                     <div class="mt-2 small text-muted">
                         Dr. @s.Physician.Name — @s.Physician.Specialty
                     </div>
+
                 </div>
             </li>
         }
